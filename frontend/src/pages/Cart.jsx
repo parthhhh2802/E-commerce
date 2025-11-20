@@ -16,20 +16,22 @@ const Cart = () => {
   const [selectedQuantity, setSelectedQuantity] = useState(1);
 
   useEffect(() => {
-    const tempData = [];
-    for (const items in cartItems) {
-      for (const item in cartItems[items]) {
-        if (cartItems[items][item] > 0) {
-          tempData.push({
-            _id: items,
-            size: item,
-            quantity: cartItems[items][item],
-          });
+    if (products.length > 0) {
+      const tempData = [];
+      for (const items in cartItems) {
+        for (const item in cartItems[items]) {
+          if (cartItems[items][item] > 0) {
+            tempData.push({
+              _id: items,
+              size: item,
+              quantity: cartItems[items][item],
+            });
+          }
         }
       }
       setCartData(tempData);
     }
-  }, [cartItems]);
+  }, [cartItems, products]);
 
   const handleConfirmRemove = (items) => {
     setItemToRemove(items);
@@ -57,7 +59,13 @@ const Cart = () => {
       <div>
         {cartData.length > 0 ? (
           cartData.map((items, index) => {
-            const productData = products.find((p) => p._id === items._id);
+            const productData = products.find(
+              (p) => String(p._id) === String(items._id) || String(p.id) === String(items._id)
+            );
+            if (!productData) {
+              console.warn(`Cart item with id ${items._id} not found in products`);
+              return null; // skip rendering if product not found
+            }
             return (
               <div
                 key={index}
@@ -65,8 +73,8 @@ const Cart = () => {
               >
                 <div className="flex gap-6 items-start">
                   <img
-                    src={productData.images[0] || ""}
-                    alt="product_images"
+                    src={productData.images[0] || "https://via.placeholder.com/100?text=No+Image"}
+                    alt={"product_images"}
                     className="w-16 sm:w-20"
                   />
                   <div>
@@ -114,7 +122,7 @@ const Cart = () => {
             </p>
             <Link to="/collection">
               <button
-                onClick={() => na}
+                onClick={() => navigate("/collection")}
                 className="inline rounded p-2 text-white bg-slate-700 text-center"
               >
                 Continue Shopping
