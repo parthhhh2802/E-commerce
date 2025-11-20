@@ -6,8 +6,21 @@ import { ShopContext } from "../context/ShopContext";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { setShowSearch, getCartCount } = useContext(ShopContext);
+  const {
+    setShowSearch,
+    getCartCount,
+    navigate,
+    token,
+    setToken,
+    setCartItems,
+  } = useContext(ShopContext);
 
+  const logout = () => {
+    localStorage.removeItem("token");
+    setToken("");
+    setCartItems({});
+    navigate("/login");
+  };
   const navLinks = [
     { to: "/", label: "Home" },
     { to: "/collection", label: "Collection" },
@@ -57,18 +70,30 @@ const Navbar = () => {
 
         {/* Profile Dropdown */}
         <div className="group relative">
-          <Link to="/login">
-            <img
-              src={assets.profile_icon}
-              className="w-8 cursor-pointer hover:scale-110 transition"
-              alt="profile"
-            />
-          </Link>
-          <div className="group-hover:opacity-100 opacity-0 group-hover:translate-y-0 -translate-y-2 transition-all duration-200 absolute right-0 mt-3 w-40 bg-white shadow-lg rounded-lg p-3">
-            <p className="cursor-pointer hover:text-rose-700">My Profile</p>
-            <p className="cursor-pointer hover:text-rose-700">Orders</p>
-            <p className="cursor-pointer hover:text-rose-700">Log Out</p>
-          </div>
+          <img
+            onClick={() => (token ? null : navigate("/login"))}
+            src={assets.profile_icon}
+            className="w-8 cursor-pointer hover:scale-110 transition"
+            alt="profile"
+          />
+          {/* drop down */}
+          {token && (
+            <div className="group-hover:opacity-100 opacity-0 group-hover:translate-y-0 -translate-y-2 transition-all duration-200 absolute right-0 mt-3 w-40 bg-white shadow-lg rounded-lg p-3">
+              <p className="cursor-pointer hover:text-rose-700">My Profile</p>
+              <p
+                onClick={() => navigate("/orders")}
+                className="cursor-pointer hover:text-rose-700"
+              >
+                Orders
+              </p>
+              <p
+                onClick={logout}
+                className="cursor-pointer hover:text-rose-700"
+              >
+                Log Out
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Cart */}

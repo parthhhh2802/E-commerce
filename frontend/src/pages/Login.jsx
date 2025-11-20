@@ -1,14 +1,55 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useContext } from "react";
+import { ShopContext } from "../context/ShopContext";
+import axios from "axios";
 import { toast } from "react-toastify";
 
 const Login = () => {
   const [currentState, setCurrentState] = useState("Login"); // "login" or "register"
   const [showPassword, setShowPassword] = useState(false);
+  const {token , setToken , navigate , backendUrl} = useContext(ShopContext);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    toast.success(`${currentState} functionality is not implemented yet.`, { position: "top-center", autoClose: 2000 });
+    try {
+       if(currentState === 'Sign Up') {
+          const res = await axios.post(backendUrl + '/api/user/register' ,{
+            name,
+            email,
+            password
+          })
+          if(res.data.success) {
+            setToken(res.data.token);
+            localStorage.setItem('token' , res.data.token);
+          } else {
+            toast.error(res.data.message);
+          }
+       } else {
+          const res = await axios.post(backendUrl + '/api/user/login' ,{
+            email,
+            password
+          })
+          if(res.data.success) {
+            setToken(res.data.token);
+            localStorage.setItem('token' , res.data.token);
+            
+          } else {
+            toast.error(res.data.message);
+          }
+       }
+    } catch (err) {
+      toast.error("An error occurred. Please try again.");
+      console.error(err);
+    }
   }
+  useEffect(() => {
+    if(token) {
+      navigate('/');
+    }
+  }, [token]);
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col items-center w-[90%] sm:max-w-96 m-auto mt-14 gap-4 text-gray-800">
@@ -26,6 +67,7 @@ const Login = () => {
                 type="text"
                 id="user"
                 placeholder=" "
+                onChange={(e) => setName(e.target.value)}
                 required
                 className="w-full px-3 pt-5 pb-2 border border-gray-300 rounded 
                           focus:outline-none focus:border-black peer"
@@ -48,6 +90,7 @@ const Login = () => {
             type="email"
             id="email"
             placeholder=" "
+            onChange={(e) => setEmail(e.target.value)}
             required
             className="w-full px-3 pt-5 pb-2 border border-gray-300 rounded 
             focus:outline-none focus:border-black peer"
@@ -68,6 +111,7 @@ const Login = () => {
             type={showPassword ? "text" : "password"}
             id="password"
             placeholder=" "
+            onChange={(e) => setPassword(e.target.value)}
             required
             className="w-full px-3 pt-5 pb-2 border border-gray-300 rounded 
             focus:outline-none focus:border-black peer pr-10"

@@ -1,5 +1,5 @@
 // src/context/ShopContext.jsx
-import { createContext, useEffect, useState } from "react";
+import { createContext, use, useEffect, useState } from "react";
 // import { products } from "../assets/assets";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +16,7 @@ const ShopContextProvider = ({ children }) => {
   const [showSearch, setShowSearch] = useState(false);
   const [cartItems , setCartItems] = useState({});
   const [products, setProducts] = useState([]);
+  const [token, setToken] = useState('');
   const navigate = useNavigate();
 
 
@@ -99,6 +100,12 @@ const ShopContextProvider = ({ children }) => {
     getProductsData();
   },[]);
 
+  useEffect(() => {
+    if(!token && localStorage.getItem('token')) {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
+
   const value = {
     products,
     currency,
@@ -115,7 +122,9 @@ const ShopContextProvider = ({ children }) => {
     getCartAmount,
     delivery_fee : 50,
     navigate,
-    backendUrl
+    backendUrl,
+    token,
+    setToken
   };
 
   return (
