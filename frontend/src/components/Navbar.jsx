@@ -6,10 +6,10 @@ import { ShopContext } from "../context/ShopContext";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { setShowSearch , getCartCount } = useContext(ShopContext);
+  const { setShowSearch, getCartCount } = useContext(ShopContext);
 
   const navLinks = [
-    { to: "/", label: 'Home' },
+    { to: "/", label: "Home" },
     { to: "/collection", label: "Collection" },
     { to: "/about", label: "About" },
     { to: "/contact", label: "Contact" },
@@ -18,21 +18,24 @@ const Navbar = () => {
   return (
     <nav className="flex items-center justify-between py-4 px-6 font-medium shadow-md bg-white">
       {/* Logo */}
-        <div className="">
-          <Link to="/" className="flex items-center gap-3">
-            <img src={logo} alt="logo" className="w-20 h-10 object-contain" />
-            <h2 className="text-lg font-semibold whitespace-nowrap">Luxuriance-Fashion</h2>
-          </Link>
-        </div>
+      <div className="">
+        <Link to="/" className="flex items-center gap-3">
+          <img src={logo} alt="logo" className="w-20 h-10 object-contain" />
+          <h2 className="text-lg font-semibold whitespace-nowrap">
+            Luxuriance-Fashion
+          </h2>
+        </Link>
+      </div>
 
-        {/* Desktop Menu */}
+      {/* Desktop Menu */}
       <ul className="hidden sm:flex gap-6 text-sm text-gray-700">
         {navLinks.map((link) => (
           <NavLink
             key={link.to}
             to={link.to}
             className={({ isActive }) =>
-              `flex flex-col items-center gap-1 hover:text-rose-700 transition ${isActive ? "text-rose-700 font-semibold" : ""
+              `flex flex-col items-center gap-1 hover:text-rose-700 transition ${
+                isActive ? "text-rose-700 font-semibold" : ""
               }`
             }
           >
@@ -54,11 +57,13 @@ const Navbar = () => {
 
         {/* Profile Dropdown */}
         <div className="group relative">
-          <img
-            src={assets.profile_icon}
-            className="w-8 cursor-pointer hover:scale-110 transition"
-            alt="profile"
-          />
+          <Link to="/login">
+            <img
+              src={assets.profile_icon}
+              className="w-8 cursor-pointer hover:scale-110 transition"
+              alt="profile"
+            />
+          </Link>
           <div className="group-hover:opacity-100 opacity-0 group-hover:translate-y-0 -translate-y-2 transition-all duration-200 absolute right-0 mt-3 w-40 bg-white shadow-lg rounded-lg p-3">
             <p className="cursor-pointer hover:text-rose-700">My Profile</p>
             <p className="cursor-pointer hover:text-rose-700">Orders</p>
@@ -79,32 +84,62 @@ const Navbar = () => {
         </Link>
 
         {/* Mobile Menu Toggle */}
-        <img onClick={() => setMenuOpen(true)} src={assets.menu_icon} alt="menu" className="w-10 cursor-pointer sm:hidden"/>
-  
+        <img
+          onClick={() => setMenuOpen(true)}
+          src={assets.menu_icon}
+          alt="menu"
+          className="w-10 cursor-pointer sm:hidden"
+        />
       </div>
       {/* Mobile Menu */}
 
-      <div className={`absolute top-0 bottom-0 overflow-hidden bg-white transition-all ${menuOpen ? 'w-full' : 'w-0'}`}>
+      <div
+        className={`absolute top-0 bottom-0 overflow-hidden bg-white transition-all ${
+          menuOpen ? "w-full" : "w-0"
+        }`}
+      >
         <div className="flex flex-col text-gray-600">
-          <div onClick={() => setMenuOpen(false)} className="flex items-center gap-4 p-3 cursor-pointer">
-            <img src={assets.dropDown_icon} className="h-4 rotate-180" alt="no" />
+          <div
+            onClick={() => setMenuOpen(false)}
+            className="flex items-center gap-4 p-3 cursor-pointer"
+          >
+            <img
+              src={assets.dropDown_icon}
+              className="h-4 rotate-180"
+              alt="no"
+            />
             <p>back</p>
           </div>
-          <NavLink onClick={() => setMenuOpen(false)}  className='py-2 pl-6 border'  to='/' >
-             Home
+          <NavLink
+            onClick={() => setMenuOpen(false)}
+            className="py-2 pl-6 border"
+            to="/"
+          >
+            Home
           </NavLink>
-          <NavLink onClick={() => setMenuOpen(false)}  className='py-2 pl-6 border' to='/collection' >
-             Collection
+          <NavLink
+            onClick={() => setMenuOpen(false)}
+            className="py-2 pl-6 border"
+            to="/collection"
+          >
+            Collection
           </NavLink>
-          <NavLink onClick={() => setMenuOpen(false)} className='py-2 pl-6 border'  to='/about' >
-             About
+          <NavLink
+            onClick={() => setMenuOpen(false)}
+            className="py-2 pl-6 border"
+            to="/about"
+          >
+            About
           </NavLink>
-          <NavLink onClick={() => setMenuOpen(false)}  className='py-2 pl-6 border' to='/contact' >
-             Contact
+          <NavLink
+            onClick={() => setMenuOpen(false)}
+            className="py-2 pl-6 border"
+            to="/contact"
+          >
+            Contact
           </NavLink>
         </div>
       </div>
-      
     </nav>
   );
 };

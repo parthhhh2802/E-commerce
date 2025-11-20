@@ -6,31 +6,66 @@ import RelatedProduct from "../components/RelatedProduct";
 
 const Product = () => {
   const { productId } = useParams();
-  const { products, currency, addToCart } = useContext(ShopContext);
+  const { products, currency, addToCart, backendUrl } = useContext(ShopContext);
   const [productData, setProductData] = useState(false);
   const [image, setImage] = useState("");
   const [size, setSize] = useState("");
 
   const fetchProductData = async () => {
-    const found = products.find((p) => String(p._id) === String(productId));
-    console.log("Searching for ID:", productId);
-    console.log("Found product:", found);
-    console.log("All products:", products);
+    try {
+      const found =
+        products && products.length
+          ? products.find((p) => String(p._id) === String(productId))
+          : null;
 
-    if (found) {
-      setProductData(found);
-      setImage(
-        Array.isArray(found.images) ? found.images[0] || "" : found.images || ""
-      );
-    } else {
+      if (found) {
+        setProductData(found);
+        setImage(
+          Array.isArray(found.images)
+            ? found.images[0] || ""
+            : found.images || ""
+        );
+        return;
+      }
+
+      // If product not found in loaded products, request single product from backend
+      if (!backendUrl) {
+        setProductData(null);
+        console.error("Product not found and backend URL is missing");
+        return;
+      }
+
+      const res = await fetch(backendUrl + "/api/product/single", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId }),
+      });
+      const data = await res.json();
+      if (data && data.success && data.product) {
+        setProductData(data.product);
+        const foundImage = Array.isArray(data.product.images)
+          ? data.product.images[0] || ""
+          : data.product.images || "";
+        setImage(foundImage);
+      } else {
+        setProductData(null);
+        console.error("Product not found");
+      }
+    } catch (err) {
+      console.error("Error fetching product:", err);
       setProductData(null);
-      console.error("Product not found");
     }
   };
 
   useEffect(() => {
     fetchProductData();
   }, [productId, products]);
+
+  if (productData === false) return <div className="opacity-0"></div>;
+  if (productData === null)
+    return (
+      <div className="py-20 text-center text-gray-600">Product not found</div>
+    );
 
   return productData ? (
     <div className="border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100">
@@ -39,27 +74,18 @@ const Product = () => {
         {/* product image */}
         <div className="flex-1 flex flex-col-reverse gap-3 sm:flex-row">
           <div className="flex flex-col overflow-x-auto sm:overflow-y-auto justify-between sm:justify-normal sm:w-[18.7%] w-full">
-            {Array.isArray(productData.images) ? (
-              productData.images.map((item, index) => (
-                <img
-                  onClick={() => setImage(item)}
-                  src={item}
-                  key={index}
-                  className="w-[24%] sm:w-full sm:mb-3 flex-shrink-0 cursor-pointer"
-                  alt={`thumb-${index}`}
-                />
-              ))
-            ) : (
+            {productData.images.map((item, index) => (
               <img
-                onClick={() => setImage(productData.images)}
-                src={productData.images}
+                onClick={() => setImage(item)}
+                src={item}
+                key={index}
                 className="w-[24%] sm:w-full sm:mb-3 flex-shrink-0 cursor-pointer"
-                alt="product"
+                alt={`thumb-${index}`}
               />
-            )}
+            ))}
           </div>
           <div className="w-full sm:w-[80%]">
-            <img src={image} className="w-full h-auto" alt="" />
+            <img src={image || ""} className="w-full h-auto" alt="" />
           </div>
         </div>
 
@@ -82,25 +108,26 @@ const Product = () => {
             {productData.description}
           </p>
           <div className="flex flex-col gap-4 my-8">
-            <p>Select Size:</p>
+            <p>Select Size :</p>
             <div className="flex gap-2">
               {/* Example sizes, you can modify as needed */}
               {productData.sizes.map((item, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSize(item)}
-                  className={`border rounded-md px-4 py-2 bg-gray-50 hover:bg-gray-300  ${
-                    item === size ? "border-rose-500 text-rose-600" : ""
-                  }`}
-                >
-                  {item}
-                </button>
-              ))}
+                    <button
+                      key={index}
+                      onClick={() => setSize(item)}
+                      className={`border rounded-md px-4 py-2 bg-gray-50 hover:bg-gray-300  ${
+                        item === size ? "border-rose-500 text-rose-600" : ""
+                      }`}
+                    >
+                      {item}
+                    </button>
+                  ))
+                }
             </div>
           </div>
           <button
             className="bg-rose-500 text-white py-2 px-4 rounded-md active:bg-rose-400"
-            onClick={() => addToCart(productData.id, size)}
+            onClick={() => addToCart(productData._id, size)}
           >
             Add to cart
           </button>

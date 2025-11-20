@@ -21,7 +21,7 @@ const Cart = () => {
       for (const item in cartItems[items]) {
         if (cartItems[items][item] > 0) {
           tempData.push({
-            id: items,
+            _id: items,
             size: item,
             quantity: cartItems[items][item],
           });
@@ -31,14 +31,14 @@ const Cart = () => {
     }
   }, [cartItems]);
 
-  const handleConfirmRemove = (item) => {
-    setItemToRemove(item);
+  const handleConfirmRemove = (items) => {
+    setItemToRemove(items);
     setShowConfirm(true);
   };
 
   const handleRemove = () => {
     if (itemToRemove) {
-      updateQuantity(itemToRemove.id, itemToRemove.size, 0);
+      updateQuantity(itemToRemove._id, itemToRemove.size, 0);
     }
     setShowConfirm(false);
     setItemToRemove(null);
@@ -56,8 +56,8 @@ const Cart = () => {
       </div>
       <div>
         {cartData.length > 0 ? (
-          cartData.map((item, index) => {
-            const productData = products.find((p) => p.id === item.id);
+          cartData.map((items, index) => {
+            const productData = products.find((p) => p._id === items._id);
             return (
               <div
                 key={index}
@@ -65,8 +65,8 @@ const Cart = () => {
               >
                 <div className="flex gap-6 items-start">
                   <img
-                    src={productData.image[0]}
-                    alt="product_image"
+                    src={productData.images[0] || ""}
+                    alt="product_images"
                     className="w-16 sm:w-20"
                   />
                   <div>
@@ -78,31 +78,31 @@ const Cart = () => {
                         {currency} {productData.price}
                       </p>
                       <p className="px-2 sm:px-3 sm:py-1 border rounded-full cursor-default bg-slate-50">
-                        {item.size}
+                        {items.size}
                       </p>
                     </div>
                   </div>
                 </div>
                 <div className="flex justify-center">
-                  <div 
+                  <div
                     onClick={() => {
-                      setEditingItem(item);
-                      setSelectedQuantity(item.quantity);
+                      setEditingItem(items);
+                      setSelectedQuantity(items.quantity);
                       setShowQuantityModal(true);
                     }}
                     className="inline-flex items-center gap-2 cursor-pointer hover:bg-slate-50 px-3 py-2 rounded transition-colors"
                   >
                     <span className="text-gray-600">Qty:</span>
-                    <span className="font-medium">{item.quantity}</span>
+                    <span className="font-medium">{items.quantity}</span>
                   </div>
-                </div>
-                <div>
-                  <img
-                    src={assets.bin_icon}
-                    onClick={() => handleConfirmRemove(item)}
-                    className="w-14 mr-4 cursor-pointer hover:scale-110 transition-transform duration-150"
-                    alt="delete"
-                  />
+                  <div>
+                    <img
+                      src={assets.bin_icon}
+                      onClick={() => handleConfirmRemove(items)}
+                      className="w-14 mr-4 cursor-pointer hover:scale-110 transition-transform duration-150"
+                      alt="delete"
+                    />
+                  </div>
                 </div>
               </div>
             );
@@ -124,15 +124,18 @@ const Cart = () => {
         )}
         {cartData.length > 0 && (
           <div className="flex justify-end mt-8 mb-20 px-4">
-          <div className="w-full max-w-md">
-            <CartTotal />
-            <div className="w-full text-end">
-              <button onClick={() => navigate('/place-order')} className="inline rounded p-2 my-8 text-white bg-rose-500 text-center">
-                PLACE ORDER
-              </button>
+            <div className="w-full max-w-md">
+              <CartTotal />
+              <div className="w-full text-end">
+                <button
+                  onClick={() => navigate("/place-order")}
+                  className="inline rounded p-2 my-8 text-white bg-rose-500 text-center"
+                >
+                  PLACE ORDER
+                </button>
+              </div>
             </div>
           </div>
-        </div>
         )}
       </div>
 
@@ -196,7 +199,7 @@ const Cart = () => {
                 onClick={() => {
                   if (editingItem) {
                     updateQuantity(
-                      editingItem.id,
+                      editingItem._id,
                       editingItem.size,
                       selectedQuantity
                     );

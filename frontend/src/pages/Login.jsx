@@ -1,11 +1,13 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 const Login = () => {
-  const [currentState, setCurrentState] = useState("Sign Up"); // "login" or "register"
+  const [currentState, setCurrentState] = useState("Login"); // "login" or "register"
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    toast.success(`${currentState} functionality is not implemented yet.`, { position: "top-center", autoClose: 2000 });
   }
 
   return (
@@ -43,21 +45,21 @@ const Login = () => {
 
         <div className="relative w-full">
           <input
-            type="tel"
-            id="mobile"
+            type="email"
+            id="email"
             placeholder=" "
             required
             className="w-full px-3 pt-5 pb-2 border border-gray-300 rounded 
             focus:outline-none focus:border-black peer"
           />
           <label
-            htmlFor="mobile"
+            htmlFor="email"
             className="absolute text-sm text-gray-500 duration-300 transform 
             -translate-y-4 scale-75 top-4 z-10 origin-[0] left-3
             peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0
             peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-black"
           >
-            Mobile Number*
+            Email*
           </label>
         </div>
 
@@ -126,7 +128,7 @@ const Login = () => {
           {currentState === "Login" ? <p className="text-gray-500">Forgot Password?</p> : ''}
           {
             currentState === "Login" ? <p onClick={() => setCurrentState('Sign Up')} className="text-gray-500 cursor-pointer">Create an account</p >
-             : <p onClick={() => setCurrentState('Login')} className="text-gray-500 cursor-pointer">Login here</p>
+             : <p onClick={() => setCurrentState('Login')} className="text-gray-500 cursor-pointer">Already have an account? Login</p >
           }
         </div>
       </div>

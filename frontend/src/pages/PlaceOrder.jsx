@@ -4,12 +4,13 @@ import FloatingLabelInput from "../components/FloatingLabelInput";
 import CartTotal from "../components/CartTotal";
 import assets from "../assets/assets";
 import { ShopContext } from "../context/ShopContext";
-import { Navigate } from "react-router-dom";
 
 const PlaceOrder = () => {
   const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
+    fname: "",
+    lname: "",
+    email: "",
+    phone:"",
     pincode: "",
     house: "",
     address: "",
@@ -51,18 +52,39 @@ const PlaceOrder = () => {
         <div className="text-xl sm:text-2xl mt-[-24px] ">
           <Title text1={"Delivery"} text2={"Information"} />
           <h4 className="contatct">Contact Details</h4>
-          <div className="my-2">
+          <div className="flex gap-4 my-2">
             <FloatingLabelInput
-              id="name"
-              label="Name"
-              value={formData.name}
+              id="fname"
+              label="First Name"
+              value={formData.fname}
               onChange={(e) =>
-                setFormData((prev) => ({ ...prev, name: e.target.value }))
+                setFormData((prev) => ({ ...prev, fname: e.target.value }))
+              }
+              required
+            />
+            <FloatingLabelInput
+              id="lname"
+              label="Last Name"
+              value={formData.lname}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, lname: e.target.value }))
               }
               required
             />
           </div>
 
+          <div className="my-2">
+            <FloatingLabelInput
+              id="email"
+              label="Email"
+              value={formData.email}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, email: e.target.value }))
+              }
+              type="email"
+              required
+            />
+          </div>
           <div className="my-2">
             <FloatingLabelInput
               id="phone"
@@ -72,6 +94,7 @@ const PlaceOrder = () => {
                 setFormData((prev) => ({ ...prev, phone: e.target.value }))
               }
               type="tel"
+              maxLength={10}
               required
             />
           </div>
@@ -149,34 +172,33 @@ const PlaceOrder = () => {
           <Title text1={"Payment"} text2={"Method"} />
           {/* payment options */}
           <div className="flex gap-3 flex-col sm:flex-row">
-            {/* PayPal */}
+            {/* stripe*/}
             <div
-              onClick={() => setMethod("paypal")}
+              onClick={() => setMethod("stripe")}
               className="flex items-center gap-3 border p-2 px-3 rounded-lg cursor-pointer"
             >
               <div
                 className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${method === "paypal" ? "border-green-600" : "border-gray-400"}`}
               >
                 <div
-                  className={`w-2 h-2 rounded-full  ${method === "paypal" ? "bg-green-600" : "bg-transparent"}`}
+                  className={`w-2 h-2 rounded-full  ${method === "stripe" ? "bg-green-600" : "bg-transparent"}`}
                 ></div>
               </div>
-              <img src={assets.payPal} alt="paypal" className="h-5 mx-2" />
+              <img src={assets.stripe_icon} alt="stripe" className="h-5 mx-2" />
             </div>
-
             {/* UPI */}
             <div
-              onClick={() => setMethod("upi")}
+              onClick={() => setMethod("razorpay")}
               className="flex items-center gap-3 border p-2 px-3 rounded-lg cursor-pointer"
             >
               <div
                 className={`w-4 h-4 rounded-full border-2 flex items-center justify-center  ${method === "upi" ? "border-green-600" : "border-gray-400"}`}
               >
                 <div
-                  className={`w-2 h-2 rounded-full  ${method === "upi" ? "bg-green-600" : "bg-transparent"}`}
+                  className={`w-2 h-2 rounded-full  ${method === "razorpay" ? "bg-green-600" : "bg-transparent"}`}
                 ></div>
               </div>
-              <img src={assets.upi_icon} alt="upi" className="h-5 mx-2" />
+              <img src={assets.razonpay_icon} alt="razor_pay" className="h-5 mx-2" />
             </div>
 
             {/* COD */}
@@ -198,7 +220,7 @@ const PlaceOrder = () => {
           </div>
           <div className="w-full text-end mt-8">
             <button 
-            className="bg-blue-600 text-white py-2 px-8 rounded-lg"
+            className="bg-rose-600 text-white py-2 px-8 rounded-lg"
             onClick={() => navigate('/orders')}
             >
               Place Order

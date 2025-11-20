@@ -13,7 +13,7 @@ const Collection = () => {
   const [subCategoryFilter, setSubCategoryFilter] = useState([]);
   const [sortOption, setSortOption] = useState("default");
 
-  console.log("Products in Collection:", products);
+  
 
   const toggleCategory = (e) => {
     if (categoryFilter.includes(e.target.value)) {

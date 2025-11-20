@@ -17,8 +17,8 @@ import BlueDenimJeans from './BlueDenimJeans.jpg'
 import search_cross_icon from './search_cross_icon.png'
 import star_icon from './star_icon.jpeg'
 import bin_icon from './bin_icon.png'
-import payPal from './payPal.png'
-import upi_icon from './upi_logo.png'
+import stripe_icon from './stripe_logo.png'
+import razonpay_icon from './razorpay_logo.png'
 
 
 // all icons/images
@@ -39,8 +39,8 @@ const assets = {
   filter_icon,
   search_cross_icon,
   star_icon,
-  payPal,
-  upi_icon,
+  stripe_icon,
+  razonpay_icon
   
 }
 
