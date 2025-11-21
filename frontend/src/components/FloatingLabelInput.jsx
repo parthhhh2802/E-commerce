@@ -2,6 +2,7 @@ import React from 'react';
 
 const FloatingLabelInput = ({ 
   id, 
+  name, 
   label, 
   value, 
   onChange, 
@@ -15,6 +16,7 @@ const FloatingLabelInput = ({
     <div className="relative flex-1">
       <input
         id={id}
+        name={name}
         type={type}
         placeholder={placeholder || label}
         value={value}

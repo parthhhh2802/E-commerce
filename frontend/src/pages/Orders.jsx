@@ -1,17 +1,38 @@
-import React from "react";
-import { useContext } from "react";
+import React, { useEffect } from "react";
+import { useContext , useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
+import axios from "axios";
 
 const Orders = () => {
-  const { products, currency } = useContext(ShopContext);
+  const { backendUrl , token, currency } = useContext(ShopContext);
+  const [orderData, setOrderData] = useState([]);
+
+  const lodeOrderData = async () => { 
+    try {
+      if(!token) return null ;
+      const response = await axios.post(
+        backendUrl + "/api/order/userorders",
+        { },
+        { headers: { token } }
+      );
+      console.log(response.data.orders);
+      setOrderData(response.data.orders);
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
+  useEffect(() => {
+    lodeOrderData();
+  }, [token]);
   return (
     <div className="border-t pt-16">
       <div className="text-2xl">
         <Title text1={"Your"} text2={"Orders"} />
       </div>
       <div>
-        {products.slice(1,4).map((product, index) => (
+        {orderData.map((product, index) => (
           <div
             key={index}
             className="py-4 border-t border-b text-gray-700 flex flex-col md:flex-row md:items-center md: justify-between gap-4"

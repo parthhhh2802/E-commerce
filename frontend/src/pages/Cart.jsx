@@ -60,7 +60,7 @@ const Cart = () => {
         {cartData.length > 0 ? (
           cartData.map((items, index) => {
             const productData = products.find(
-              (p) => String(p._id) === String(items._id) || String(p.id) === String(items._id)
+              (p) => String(p._id) === String(items._id) || String(p._id) === String(items._id)
             );
             if (!productData) {
               console.warn(`Cart item with id ${items._id} not found in products`);
