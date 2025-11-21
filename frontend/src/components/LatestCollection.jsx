@@ -10,7 +10,7 @@ const LatestCollection = () => {
   useEffect(() => {
     // Only run this code if products is a valid array
     if (products && products.length > 0) {
-      setLatestProducts(products.slice(0, 10));
+      setLatestProducts(products.slice(0, 4));
     }
   }, [products]); // Add products to the dependency array
 

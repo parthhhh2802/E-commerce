@@ -1,11 +1,12 @@
 import React from 'react';
 import Title from '../components/Title';
 import FloatingLabelInput from '../components/FloatingLabelInput';
+import { toast } from "react-toastify";
 
 const Contact = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("Thank you for contacting us!");
+    toast.success("Thank you for contacting us!");
     // Add form submission logic here
   };
 
