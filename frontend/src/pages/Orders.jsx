@@ -1,27 +1,40 @@
 import React, { useEffect } from "react";
-import { useContext , useState } from "react";
+import { useContext, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
 import axios from "axios";
 
 const Orders = () => {
-  const { backendUrl , token, currency } = useContext(ShopContext);
+  const { backendUrl, token, currency } = useContext(ShopContext);
   const [orderData, setOrderData] = useState([]);
 
-  const lodeOrderData = async () => { 
+  const lodeOrderData = async () => {
     try {
-      if(!token) return null ;
-      const response = await axios.post(
+      if (!token) {
+        return null;
+      }
+      const res = await axios.post(
         backendUrl + "/api/order/userorders",
-        { },
+        {},
         { headers: { token } }
       );
-      console.log(response.data.orders);
-      setOrderData(response.data.orders);
+      if (res.data.success) {
+        let allOrderItem = [];
+        res.data.orders.map((order) => {
+          order.items.map((item) => {
+            item['status'] = order.status;
+            item['payment'] = order.payment;
+            item['paymentMethod'] = order.paymentMethod;
+            item['date'] = order.date;
+            allOrderItem.push(item);
+          })
+        })
+        setOrderData(allOrderItem.reverse());
+      }
     } catch (error) {
-      console.log(error.message)
+      console.log(error.message);
     }
-  }
+  };
 
   useEffect(() => {
     lodeOrderData();
@@ -49,11 +62,11 @@ const Orders = () => {
                   <p className="text-lg">
                     {currency} {product.price}
                   </p>
-                  <p>Quantity: 1</p>
-                  <p>Size: M</p>
+                  <p>Quantity: {product.quantity}</p>
+                  <p>Size: {product.size}</p>
                 </div>
                 <p className="mt-2">
-                  Date: <span className="text-gray-400">25 july 2025</span>
+                  Date: <span className="text-gray-400">{new Date(product.date).toLocaleDateString()}</span>
                 </p>
               </div>
             </div>
@@ -62,7 +75,9 @@ const Orders = () => {
                 <p className="min-w-2 h-2 rounded-full bg-green-500"></p>
                 <p className="text-base">Ready to ship</p>
               </div>
-              <button className="border px-4 py-2 text-sm font-medium rounded bg-rose-500 text-white">Track order</button>
+              <button className="border px-4 py-2 text-sm font-medium rounded bg-rose-500 text-white">
+                Track order
+              </button>
             </div>
           </div>
         ))}
