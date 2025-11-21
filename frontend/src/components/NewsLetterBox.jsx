@@ -3,6 +3,7 @@ import React from "react";
 const NewsLetterBox = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
+        alert("Thank you for subscribing!");
     }
     return (
         <div className="text-center">
@@ -20,6 +21,7 @@ const NewsLetterBox = () => {
                     required
                 />
                 <button
+                    onClick={(e) => handleSubmit(e)}
                     type="submit"
                     className="bg-rose-500 text-white px-6 py-2 mb-4 mx-4 mt-4 hover:bg-rose-900 transition-colors"
                 >

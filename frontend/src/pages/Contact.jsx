@@ -5,6 +5,7 @@ import FloatingLabelInput from '../components/FloatingLabelInput';
 const Contact = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
+    alert("Thank you for contacting us!");
     // Add form submission logic here
   };
 
@@ -61,6 +62,7 @@ const Contact = () => {
               </label>
             </div>
             <button
+              onClick={handleSubmit}
               type="submit"
               className="w-full bg-orange-600 text-white py-3 rounded hover:bg-orange-700 
               transition-colors duration-300"
